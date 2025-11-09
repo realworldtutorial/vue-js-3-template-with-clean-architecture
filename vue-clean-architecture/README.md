@@ -1,0 +1,255 @@
+# Vue Clean Architecture with Express.js API
+
+A full-stack application demonstrating Clean Architecture principles with Vue.js 3 frontend and Express.js backend API, featuring JWT authentication.
+
+## 🏗️ Architecture Overview
+
+This project follows Clean Architecture principles, separating concerns into distinct layers:
+
+### Frontend (Vue.js)
+- **Core Layer**: Business logic and domain entities
+  - `entities/`: Domain models (User, Auth)
+  - `repositories/`: Repository interfaces
+  - `usecases/`: Business logic use cases
+
+- **Data Layer**: Data management and external communication
+  - `datasources/`: API communication (ApiDataSource)
+  - `models/`: Data transfer objects
+  - `repositories/`: Repository implementations
+
+- **Presentation Layer**: UI and user interaction
+  - `views/`: Page components
+  - `components/`: Reusable UI components
+  - `stores/`: Pinia state management
+  - `router/`: Vue Router configuration
+
+### Backend (Express.js)
+- `config/`: Application configuration
+- `models/`: Data models and in-memory database
+- `controllers/`: Request handlers
+- `routes/`: API route definitions
+- `middleware/`: Authentication, validation, error handling
+- `utils/`: Helper functions (JWT, password hashing)
+
+## ✨ Features
+
+- 🔐 **JWT Authentication**: Secure user registration and login
+- 👥 **User Management**: CRUD operations for users
+- 📦 **State Management**: Pinia for reactive state
+- 🛣️ **Routing**: Vue Router with navigation guards
+- 🎨 **Modern UI**: Clean and responsive design
+- ✅ **Input Validation**: Server-side validation with express-validator
+- 🔒 **Password Security**: Bcrypt password hashing
+- 📝 **Comprehensive Comments**: Every file includes detailed explanations
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. **Install Frontend Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Install Backend Dependencies**
+   ```bash
+   cd server
+   npm install
+   cd ..
+   ```
+
+### Running the Application
+
+You need to run both the backend server and frontend application:
+
+1. **Start the Backend Server** (Terminal 1)
+   ```bash
+   cd server
+   npm run dev
+   ```
+   The server will start on `http://localhost:3000`
+
+2. **Start the Frontend Application** (Terminal 2)
+   ```bash
+   npm run dev
+   ```
+   The Vue app will start on `http://localhost:5173`
+
+### Building for Production
+
+**Frontend:**
+```bash
+npm run build
+```
+
+**Backend:**
+```bash
+cd server
+npm start
+```
+
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register a new user
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+
+- `POST /api/auth/login` - Login user
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+
+- `GET /api/auth/me` - Get current user (requires authentication)
+  - Header: `Authorization: Bearer <token>`
+
+- `POST /api/auth/logout` - Logout user
+
+### Users
+- `GET /api/users` - Get all users
+- `GET /api/users/:id` - Get user by ID
+- `POST /api/users` - Create a new user
+- `PUT /api/users/:id` - Update user (requires authentication)
+- `DELETE /api/users/:id` - Delete user (requires authentication)
+
+## 🔒 Authentication Flow
+
+1. **Registration**: User submits registration form → Backend validates and creates user → Returns JWT token → Frontend stores token in localStorage
+2. **Login**: User submits login credentials → Backend verifies credentials → Returns JWT token → Frontend stores token
+3. **Authenticated Requests**: Frontend includes token in Authorization header → Backend validates token → Processes request
+4. **Logout**: Frontend removes token from localStorage
+
+## 📁 Project Structure
+
+```
+vue-clean-architecture/
+├── src/
+│   ├── core/                    # Business logic layer
+│   │   ├── entities/            # Domain models
+│   │   ├── repositories/        # Repository interfaces
+│   │   └── usecases/            # Business use cases
+│   ├── data/                    # Data layer
+│   │   ├── datasources/         # API communication
+│   │   ├── models/              # Data models
+│   │   └── repositories/        # Repository implementations
+│   ├── presentation/            # Presentation layer
+│   │   ├── components/          # Vue components
+│   │   ├── views/               # Page views
+│   │   ├── stores/              # Pinia stores
+│   │   └── router/              # Vue Router
+│   ├── assets/                  # Static assets
+│   ├── App.vue                  # Root component
+│   └── main.js                  # App entry point
+├── server/                      # Express.js backend
+│   ├── src/
+│   │   ├── config/              # Configuration
+│   │   ├── controllers/         # Request handlers
+│   │   ├── middleware/          # Middleware functions
+│   │   ├── models/              # Data models
+│   │   ├── routes/              # API routes
+│   │   ├── utils/               # Utility functions
+│   │   └── server.js            # Server entry point
+│   ├── .env                     # Environment variables
+│   └── package.json             # Server dependencies
+├── package.json                 # Frontend dependencies
+└── README.md                    # This file
+```
+
+## 🔧 Configuration
+
+### Backend Configuration
+
+Edit `server/.env` to configure:
+
+```env
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=24h
+CORS_ORIGIN=http://localhost:5173
+```
+
+**Important**: Change `JWT_SECRET` to a random secure string in production!
+
+## 🎯 Key Concepts
+
+### Clean Architecture Benefits
+- **Independence**: Business logic is independent of frameworks, UI, and databases
+- **Testability**: Business logic can be tested without UI, database, or external dependencies
+- **Flexibility**: Easy to swap implementations (e.g., change from REST API to GraphQL)
+- **Maintainability**: Clear separation of concerns makes code easier to understand and modify
+
+### Dependency Flow
+```
+Presentation → Use Cases → Repositories → Data Sources
+(UI)         (Business)   (Interfaces)   (External)
+```
+
+Dependencies point inward - inner layers know nothing about outer layers.
+
+## 📝 Code Comments
+
+Every file in this project includes detailed comments explaining:
+- Purpose of the file
+- Function descriptions and parameters
+- Business logic reasoning
+- Important implementation details
+
+## 🛠️ Technologies Used
+
+### Frontend
+- **Vue.js 3**: Progressive JavaScript framework
+- **Pinia**: State management
+- **Vue Router**: Official router for Vue.js
+- **Axios**: HTTP client for API requests
+- **Vite**: Build tool and development server
+
+### Backend
+- **Express.js**: Web application framework
+- **JWT**: JSON Web Tokens for authentication
+- **Bcrypt.js**: Password hashing
+- **Express Validator**: Input validation
+- **CORS**: Cross-origin resource sharing
+- **Dotenv**: Environment variable management
+
+## 📖 Learning Resources
+
+- [Vue.js Documentation](https://vuejs.org/)
+- [Pinia Documentation](https://pinia.vuejs.org/)
+- [Express.js Guide](https://expressjs.com/)
+- [JWT Introduction](https://jwt.io/introduction)
+- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+## Commands
+
+- `npm run dev` - Start frontend development server
+- `npm run build` - Build frontend for production
+- `npm run preview` - Preview production build
+- `cd server && npm run dev` - Start backend development server
+- `cd server && npm start` - Start backend production server
+
+## 🤝 Contributing
+
+This is a demonstration project for learning Clean Architecture. Feel free to fork and experiment!
+
+## 📄 License
+
+MIT License - Feel free to use this project for learning and development.
+
+## 👨‍💻 Author
+
+Created as an educational example of Clean Architecture implementation with Vue.js and Express.js.
+
