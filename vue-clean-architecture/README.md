@@ -1,6 +1,6 @@
 # Vue Clean Architecture with Express.js API
 
-A full-stack application demonstrating Clean Architecture principles with Vue.js 3 frontend and Express.js backend API, featuring JWT authentication.
+A full-stack application demonstrating Clean Architecture principles with Vue.js 3 frontend and Express.js backend API, featuring JWT authentication and comprehensive user management.
 
 ## 🏗️ Architecture Overview
 
@@ -10,37 +10,38 @@ This project follows Clean Architecture principles, separating concerns into dis
 - **Core Layer**: Business logic and domain entities
   - `entities/`: Domain models (User, Auth)
   - `repositories/`: Repository interfaces
-  - `usecases/`: Business logic use cases
+  - `usecases/`: Business logic use cases (Login, Register, CRUD operations)
 
 - **Data Layer**: Data management and external communication
   - `datasources/`: API communication (ApiDataSource)
-  - `models/`: Data transfer objects
-  - `repositories/`: Repository implementations
+  - `models/`: Data transfer objects (UserModel, AuthModel)
+  - `repositories/`: Repository implementations (AuthRepositoryImpl, UserRepositoryImpl)
 
 - **Presentation Layer**: UI and user interaction
-  - `views/`: Page components
-  - `components/`: Reusable UI components
-  - `stores/`: Pinia state management
+  - `views/`: Page components (Home, Login, Register, Users)
+  - `components/`: Reusable UI components (NavBar, UserCard)
+  - `stores/`: Pinia state management (auth, user stores)
   - `router/`: Vue Router configuration
 
 ### Backend (Express.js)
 - `config/`: Application configuration
-- `models/`: Data models and in-memory database
-- `controllers/`: Request handlers
-- `routes/`: API route definitions
+- `models/`: Data models with in-memory database
+- `controllers/`: Request handlers (auth, user controllers)
+- `routes/`: API route definitions (auth, user routes)
 - `middleware/`: Authentication, validation, error handling
 - `utils/`: Helper functions (JWT, password hashing)
 
 ## ✨ Features
 
-- 🔐 **JWT Authentication**: Secure user registration and login
-- 👥 **User Management**: CRUD operations for users
-- 📦 **State Management**: Pinia for reactive state
-- 🛣️ **Routing**: Vue Router with navigation guards
-- 🎨 **Modern UI**: Clean and responsive design
-- ✅ **Input Validation**: Server-side validation with express-validator
-- 🔒 **Password Security**: Bcrypt password hashing
-- 📝 **Comprehensive Comments**: Every file includes detailed explanations
+- 🔐 **JWT Authentication**: Secure user registration and login system
+- 👥 **User Management**: Complete CRUD operations with validation
+- 📦 **State Management**: Pinia stores for auth and user states
+- 🛣️ **Routing**: Protected routes with navigation guards
+- 🎨 **Modern UI**: Responsive components with Vue 3
+- ✅ **Input Validation**: Both client and server-side validation
+- 🔒 **Security**: Bcrypt password hashing and JWT token management
+- 📝 **Error Handling**: Comprehensive error handling middleware
+- 🔄 **Clean Architecture**: Strict separation of concerns
 
 ## 🚀 Getting Started
 
@@ -121,7 +122,7 @@ npm start
 ### Users
 - `GET /api/users` - Get all users
 - `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create a new user
+- `POST /api/users` - Create a new user (with optional password)
 - `PUT /api/users/:id` - Update user (requires authentication)
 - `DELETE /api/users/:id` - Delete user (requires authentication)
 
@@ -184,21 +185,39 @@ CORS_ORIGIN=http://localhost:5173
 
 **Important**: Change `JWT_SECRET` to a random secure string in production!
 
-## 🎯 Key Concepts
+## 🎯 Key Implementation Details
 
-### Clean Architecture Benefits
-- **Independence**: Business logic is independent of frameworks, UI, and databases
-- **Testability**: Business logic can be tested without UI, database, or external dependencies
-- **Flexibility**: Easy to swap implementations (e.g., change from REST API to GraphQL)
-- **Maintainability**: Clear separation of concerns makes code easier to understand and modify
+### Authentication Flow
+1. **Registration**:
+   - Client-side validation
+   - Server validates input
+   - Password hashing with bcrypt
+   - JWT token generation
+   - User creation in database
 
-### Dependency Flow
-```
-Presentation → Use Cases → Repositories → Data Sources
-(UI)         (Business)   (Interfaces)   (External)
-```
+2. **Login**:
+   - Email/password validation
+   - Credential verification
+   - JWT token generation
+   - Client-side token storage
 
-Dependencies point inward - inner layers know nothing about outer layers.
+3. **Protected Routes**:
+   - JWT verification middleware
+   - Role-based access control
+   - Token expiration handling
+
+### User Management
+- **CRUD Operations**:
+  - Create: With validation and optional password
+  - Read: List all users and get by ID
+  - Update: Partial updates with validation
+  - Delete: With proper authorization
+
+### Error Handling
+- Comprehensive error middleware
+- Structured error responses
+- Client-side error presentation
+- Validation error handling
 
 ## 📝 Code Comments
 

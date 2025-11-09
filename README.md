@@ -1,27 +1,37 @@
-# Vue 3 Clean Architecture Project
+# Vue 3 Clean Architecture Template with Express Backend
 
-This project follows Clean Architecture principles with clear separation of concerns.
+This template provides a full-stack application structure following Clean Architecture principles, featuring a Vue.js 3 frontend and Express.js backend with JWT authentication.
 
 ## Project Structure
 
 ```
 vue-clean-architecture/
-├── src/
-│   ├── core/                    # Domain Layer (Business Logic)
-│   │   ├── entities/           # Business entities
-│   │   ├── usecases/          # Application use cases
-│   │   └── repositories/      # Repository interfaces
-│   ├── data/                   # Data Layer
-│   │   ├── repositories/      # Repository implementations
-│   │   ├── datasources/       # API clients, local storage
-│   │   └── models/            # Data models/DTOs
-│   ├── presentation/           # Presentation Layer
-│   │   ├── views/             # Page components
-│   │   ├── components/        # Reusable UI components
-│   │   ├── stores/            # Pinia stores
-│   │   └── router/            # Vue Router configuration
-│   └── main.js                # Application entry point
-├── public/                     # Static assets
+├── src/                       # Frontend Application
+│   ├── core/                  # Domain Layer (Business Logic)
+│   │   ├── entities/         # Business entities (User, Auth)
+│   │   ├── usecases/        # Application use cases (Login, Register, CRUD)
+│   │   └── repositories/    # Repository interfaces (User, Auth)
+│   ├── data/                 # Data Layer
+│   │   ├── repositories/    # Repository implementations
+│   │   ├── datasources/     # API client implementation
+│   │   └── models/          # Data transfer objects
+│   ├── presentation/         # Presentation Layer
+│   │   ├── views/           # Pages (Home, Login, Register, Users)
+│   │   ├── components/      # UI components (NavBar, UserCard)
+│   │   ├── stores/          # Pinia stores (auth, user)
+│   │   └── router/          # Vue Router with guards
+│   └── main.js              # Application entry point
+├── server/                   # Backend Application
+│   ├── src/
+│   │   ├── config/         # Server configuration
+│   │   ├── controllers/    # Request handlers (auth, users)
+│   │   ├── middleware/     # Auth, validation, errors
+│   │   ├── models/        # Data models
+│   │   ├── routes/        # API routes
+│   │   ├── utils/         # JWT, password hashing
+│   │   └── server.js      # Server entry point
+│   └── package.json
+├── public/                  # Static assets
 ├── index.html
 ├── vite.config.js
 └── package.json
@@ -29,46 +39,119 @@ vue-clean-architecture/
 
 ## Setup Instructions
 
-1. Run `setup-vue-project.bat` to create the project structure and install dependencies
-2. Copy all template files to the vue-clean-architecture folder
-3. Run `npm run dev` to start development server
+1. Run `setup-vue-project.bat` to create the project structure
+2. Copy template files to the vue-clean-architecture folder
+3. Install dependencies:
+   ```bash
+   # Install frontend dependencies
+   npm install
 
-## Clean Architecture Layers
+   # Install backend dependencies
+   cd server
+   npm install
+   cd ..
+   ```
+4. Create `server/.env` file:
+   ```env
+   PORT=3000
+   NODE_ENV=development
+   JWT_SECRET=your-secret-key-change-in-production
+   JWT_EXPIRES_IN=24h
+   CORS_ORIGIN=http://localhost:5173
+   ```
+5. Start the application:
+   ```bash
+   # Terminal 1: Start backend
+   cd server
+   npm run dev
 
-### 1. Core (Domain Layer)
-- **Entities**: Pure business objects with no framework dependencies
-- **Use Cases**: Application-specific business rules
-- **Repository Interfaces**: Contracts for data access
+   # Terminal 2: Start frontend
+   npm run dev
+   ```
 
-### 2. Data Layer
-- **Repository Implementations**: Concrete implementations of repository interfaces
-- **Data Sources**: API clients, LocalStorage adapters, etc.
-- **Models**: DTOs for external data transformation
+## Architecture Overview
 
-### 3. Presentation Layer
-- **Views**: Page-level components
-- **Components**: Reusable UI components
-- **Stores**: Pinia stores that use use cases
-- **Router**: Vue Router configuration
+### 1. Frontend Layers
 
-## Dependency Rule
+#### Core (Domain Layer)
+- **Entities**: 
+  - `User.js`: User domain entity
+  - `Auth.js`: Authentication entity
+- **Use Cases**: 
+  - Authentication: Login, Register, Logout
+  - User Management: Create, Read, Update, Delete
+- **Repository Interfaces**: Define data access contracts
 
-Dependencies point inward:
-- Presentation → Core
-- Data → Core
-- Core has NO dependencies on outer layers
+#### Data Layer
+- **Repository Implementations**: API integration
+- **Data Sources**: REST API client with Axios
+- **Models**: Data transfer objects with validation
 
-## Example Flow
+#### Presentation Layer
+- **Views**: Route-level components with business logic
+- **Components**: Reusable UI elements
+- **Stores**: State management with Pinia
+- **Router**: Route guards and navigation
 
-1. User interacts with View
-2. View dispatches action to Store
-3. Store calls Use Case
-4. Use Case uses Repository Interface
-5. Repository Implementation (Data Layer) fetches data
-6. Data flows back through layers
+### 2. Backend Structure
 
-## Commands
+#### API Layer
+- **Controllers**: Handle HTTP requests
+- **Routes**: Define API endpoints
+- **Middleware**: Auth, validation, error handling
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
+#### Core Features
+- JWT authentication
+- Password encryption
+- Input validation
+- Error handling
+- CORS support
+
+## Key Features
+
+### Authentication
+- 🔐 Secure JWT-based authentication
+- 🔑 Password hashing with bcrypt
+- 🚫 Protected routes with middleware
+- 🔄 Token management and refresh
+
+### User Management
+- 📋 Complete CRUD operations
+- ✅ Input validation on both ends
+- 🔍 User search and filtering
+- 🔒 Role-based access control
+
+### Development Features
+- 🏗️ Clean Architecture pattern
+- 🎯 Dependency injection
+- 🔄 State management with Pinia
+- 📝 Comprehensive error handling
+
+## Data Flow Example
+
+1. User submits login form
+2. View dispatches login action to auth store
+3. Store calls LoginUserUseCase
+4. UseCase calls AuthRepository interface
+5. AuthRepositoryImpl makes API request
+6. Server validates and returns JWT
+7. Token stored and user redirected
+
+## Available Commands
+
+### Frontend
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
+```
+
+### Backend
+```bash
+cd server
+npm run dev      # Start development server
+npm start        # Start production server
+```
+
+## Template Files
+All .template files contain boilerplate code that will be copied to the project structure during setup. This ensures a consistent and clean architecture implementation.
